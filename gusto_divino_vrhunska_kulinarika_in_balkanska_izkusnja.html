@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="sl" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gusto Divino - Vrhunska Balkanska & Mediteranska Kulinarika</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#fdf8e6',
+                            300: '#f6e297',
+                            400: '#ebd069',
+                            500: '#d4af37',
+                            600: '#b38f24',
+                            700: '#8a6c17'
+                        },
+                        charcoal: '#121212',
+                        darkcard: '#1a1a1a',
+                        darkborder: '#2a2a2a'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .glass-dark { background: rgba(18, 18, 18, 0.85); border: 1px solid rgba(212, 175, 55, 0.2); }
+        .glass-light { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(212, 175, 55, 0.3); }
+        .gold-gradient { background: linear-gradient(135deg, #f6e297 0%, #d4af37 50%, #8a6c17 100%); }
+        .gold-text { background: linear-gradient(135deg, #f6e297 0%, #d4af37 50%, #8a6c17 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-charcoal text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col">
+
+    <!-- TOP STATUS BAR -->
+    <div id="topStatus" class="bg-charcoal text-gold-400 text-xs py-1.5 px-4 border-b border-gold-500/20 flex flex-wrap justify-between items-center z-50">
+        <div class="flex items-center space-x-4">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <strong class="text-white">STATUS:</strong> ODPRTO (11:00 - 23:00)</span>
+            <span class="hidden md:inline text-slate-400">|</span>
+            <span class="hidden md:flex items-center gap-1 text-slate-300"><i class="fa-solid fa-users text-gold-500"></i> Zasedenost: <strong id="occupancyRate">68%</strong></span>
+            <span class="hidden lg:inline text-slate-400">|</span>
+            <span class="hidden lg:flex items-center gap-1 text-slate-300"><i class="fa-solid fa-square-parking text-emerald-400"></i> Brezplačno parkirišče: 12 prostih mest</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- Ambient Music Selector -->
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-darkborder border border-gold-500/30 text-gold-300">
+                <i class="fa-solid fa-music text-amber-500" id="ambientIcon"></i>
+                <select id="musicSelect" onchange="setAmbientMusic(this.value)" class="bg-transparent text-xs focus:outline-none cursor-pointer">
+                    <option value="off">Glasba: Izklop</option>
+                    <option value="fireplace">Ambient kamin</option>
+                    <option value="tamburica">Balkanski tamburaši</option>
+                    <option value="mediteran">Mediteranski chill</option>
+                    <option value="jazz">Nočni jazz bar</option>
+                </select>
+            </div>
+            <!-- Language Toggle -->
+            <button onclick="toggleLanguage()" class="hover:text-white transition font-medium uppercase text-xs" id="langBtn">SLO | ENG</button>
+            <!-- Dark Mode Toggle -->
+            <button onclick="toggleDarkMode()" class="text-slate-300 hover:text-gold-400 p-1">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN NAVIGATION -->
+    <header class="sticky top-0 z-40 w-full glass glass-dark border-b border-gold-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+                    <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-charcoal font-serif font-bold text-2xl shadow-lg shadow-gold-500/20">
+                        GD
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl font-bold tracking-wider gold-text block">GUSTO DIVINO</span>
+                        <span class="text-[10px] tracking-[0.25em] text-slate-400 uppercase -mt-1 block">Balkan & Mediterranean</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden xl:flex items-center space-x-1">
+                    <button onclick="showSection('home')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="home">Domov</button>
+                    <button onclick="showSection('menu')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="menu">Meni</button>
+                    <button onclick="showSection('board')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition text-gold-400" data-sec="board"><i class="fa-solid fa-utensils text-xs mr-1"></i>Sestavi Ploščo</button>
+                    <button onclick="showSection('sommelier')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="sommelier">Sommelier</button>
+                    <button onclick="showSection('chef')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="chef">Chef's Table</button>
+                    <button onclick="showSection('gallery')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="gallery">Utrinki</button>
+                    <button onclick="showSection('events')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="events">Dogodki</button>
+                    <button onclick="showSection('giftcards')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="giftcards">Darilni Boni</button>
+                    <button onclick="showSection('reviews')" class="nav-btn px-3 py-2 text-sm font-medium hover:text-gold-400 transition" data-sec="reviews">Ocene (5.0★)</button>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="hidden sm:flex items-center space-x-4">
+                    <button onclick="showSection('reservation')" class="px-5 py-2.5 rounded-full gold-gradient text-charcoal font-semibold text-sm hover:opacity-90 transition shadow-lg shadow-gold-500/20">
+                        <i class="fa-solid fa-calendar-check mr-1.5"></i> Rezervacija
+                    </button>
+                    <button onclick="toggleCartDrawer()" class="relative p-2.5 text-gold-400 hover:text-gold-300 transition rounded-full bg-darkborder">
+                        <i class="fa-solid fa-basket-shopping text-lg"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center space-x-3 xl:hidden">
+                    <button onclick="toggleCartDrawer()" class="relative p-2 text-gold-400">
+                        <i class="fa-solid fa-basket-shopping text-xl"></i>
+                        <span id="cartBadgeMobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button onclick="toggleMobileNav()" class="p-2 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-bars text-2xl" id="mobileNavIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden xl:hidden bg-charcoal border-b border-gold-500/20 px-4 pt-2 pb-6 space-y-2">
+            <button onclick="showSection('home'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Domov</button>
+            <button onclick="showSection('menu'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Meni Balkanske Kulinarike</button>
+            <button onclick="showSection('board'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-gold-400 hover:bg-darkborder rounded font-semibold"><i class="fa-solid fa-utensils mr-2"></i>Sestavi Svojo Ploščo</button>
+            <button onclick="showSection('sommelier'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Virtualni Sommelier</button>
+            <button onclick="showSection('chef'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">VIP Chef's Table</button>
+            <button onclick="showSection('gallery'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Galerija Utrinkov</button>
+            <button onclick="showSection('events'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Dogodki & Živa Glasba</button>
+            <button onclick="showSection('giftcards'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Darilni Boni</button>
+            <button onclick="showSection('reviews'); toggleMobileNav();" class="block w-full text-left px-3 py-2 text-slate-200 hover:bg-darkborder rounded">Mnenja Gostov (5.0★)</button>
+            <button onclick="showSection('reservation'); toggleMobileNav();" class="w-full mt-3 py-3 rounded-xl gold-gradient text-charcoal font-bold text-center">
+                Rezerviraj Mizo
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENT SECTIONS (SPA) -->
+    <main class="flex-grow">
+
+        <!-- 1. HOME SECTION -->
+        <section id="sec-home" class="spa-section">
+            <!-- Hero Banner -->
+            <div class="relative min-h-[85vh] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(rgba(18, 18, 18, 0.75), rgba(18, 18, 18, 0.85)), url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1920&q=80');">
+                <div class="max-w-4xl mx-auto text-center px-4 py-16 z-10">
+                    <span class="text-gold-400 uppercase tracking-[0.3em] font-semibold text-sm sm:text-base block mb-3 animate-fade-in">Pristni Okusi Tradicije v Moderni Preobleki</span>
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight">
+                        Vrhunska Balkanska & Mediteranska Kulinarika
+                    </h1>
+                    <p class="text-slate-300 text-lg sm:text-xl max-w-2xl mx-auto mb-10 font-light">
+                        Izbrani kosi mesa na pravem oglju, sveže mediteranske ribe, ročno izdelani bureka in premijska balkanska vina v ambientu elegance.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button onclick="showSection('reservation')" class="w-full sm:w-auto px-8 py-4 rounded-full gold-gradient text-charcoal font-bold text-lg hover:shadow-xl hover:shadow-gold-500/20 transition transform hover:-translate-y-0.5">
+                            Rezerviraj Mizo z Izbirnikom
+                        </button>
+                        <button onclick="showSection('menu')" class="w-full sm:w-auto px-8 py-4 rounded-full bg-darkborder/80 border border-gold-500/40 text-white font-semibold text-lg hover:bg-gold-500/20 transition">
+                            Razišči Meni & Naroči
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Highlights -->
+            <div class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl hover:border-gold-500/40 transition">
+                    <div class="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-charcoal text-2xl mb-6">
+                        <i class="fa-solid fa-fire-burner"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-3">Pravi Lesni Oglje</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        Naši čevapčiči, pleskavice in telečja krača so pripravljeni na tradicionalnem žaru na pravi bukov oglje po stoletnem receptu naših mojstrov.
+                    </p>
+                </div>
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl hover:border-gold-500/40 transition">
+                    <div class="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-charcoal text-2xl mb-6">
+                        <i class="fa-solid fa-wine-glass"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-3">Balkanska Vinska Klet</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        Preko 150 vrhunskih etiket iz Slovenije, Makedonije, Srbije, Hrvaške in Grčije. Naš virtualni sommelier vam pomaga poiskati popolno kombinacijo.
+                    </p>
+                </div>
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl hover:border-gold-500/40 transition">
+                    <div class="w-14 h-14 rounded-full gold-gradient flex items-center justify-center text-charcoal text-2xl mb-6">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-3">VIP Chef's Table</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        Ekskluzivna degustacijska izkušnja s 7 hodi, pripravljena pred vašimi očmi z osebno strežbo našega šef kuhinje in vrhunskim lanskim vinom.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MENU SECTION -->
+        <section id="sec-menu" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Gurmanski Užitki</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Kulinarični Meni Gusto Divino</h2>
+                <p class="text-slate-400 mt-2 max-w-xl mx-auto">Vse jedi pripravljamo iz svežih sestavin lokalnih dobaviteljev in tradicionalnih balkanskih kmetij.</p>
+            </div>
+
+            <!-- Menu Category Filter -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="menuFilters">
+                <button onclick="filterMenu('all')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 bg-gold-500 text-charcoal active">Vse Jedi</button>
+                <button onclick="filterMenu('predjedi')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 hover:bg-gold-500/20">Hladne & Tople Predjedi</button>
+                <button onclick="filterMenu('roštilj')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 hover:bg-gold-500/20">Balkanski Roštilj</button>
+                <button onclick="filterMenu('glavne')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 hover:bg-gold-500/20">Hišne Specialitete</button>
+                <button onclick="filterMenu('sladice')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 hover:bg-gold-500/20">Tradicionalne Sladice</button>
+                <button onclick="filterMenu('pijače')" class="menu-filter-btn px-5 py-2 rounded-full text-sm font-medium border border-gold-500/30 hover:bg-gold-500/20">Vina & Žganja</button>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menuGrid">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+        <!-- 3. CUSTOM BOARD BUILDER SECTION -->
+        <section id="sec-board" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Ustvarjalni Kotiček</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Sestavi Svojo Balkansko Ploščo</h2>
+                <p class="text-slate-400 mt-2 max-w-2xl mx-auto">Izberite najljubše kose mesa, priloge, omake in sire. Mi jih bomo servirali na ročno obdelani leseni plošči z vročim somunom.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Selection Panel -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Step 1: Meso -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-lg">
+                        <h3 class="text-xl font-serif font-bold text-gold-400 mb-4 flex items-center justify-between">
+                            <span>1. Izberite Meso & Specialitete</span>
+                            <span class="text-xs text-slate-400 font-sans">Izberite vsaj 2 vrsti</span>
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="boardMeatOptions">
+                            <!-- JS Generated -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Omaka & Sir -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-lg">
+                        <h3 class="text-xl font-serif font-bold text-gold-400 mb-4">2. Omake & Balkanski Siri</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="boardSauceOptions">
+                            <!-- JS Generated -->
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Priloge -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-lg">
+                        <h3 class="text-xl font-serif font-bold text-gold-400 mb-4">3. Priloge & Kruh</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="boardSideOptions">
+                            <!-- JS Generated -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Board Preview -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-28 bg-white dark:bg-darkcard p-6 rounded-2xl border border-gold-500/30 shadow-2xl">
+                        <div class="text-center border-b border-slate-200 dark:border-darkborder pb-4 mb-4">
+                            <i class="fa-solid fa-plate-wheat text-4xl text-gold-400 mb-2"></i>
+                            <h3 class="text-2xl font-serif font-bold">Vaša Gusto Plošča</h3>
+                            <p class="text-xs text-slate-400">Za 2 do 4 osebe</p>
+                        </div>
+
+                        <div id="boardSummaryList" class="space-y-2 text-sm min-h-[160px] max-h-[300px] overflow-y-auto custom-scrollbar mb-6">
+                            <p class="text-slate-400 italic text-center py-8">Plošča je trenutno prazna. Izberite sestavine na levi strani.</p>
+                        </div>
+
+                        <div class="border-t border-slate-200 dark:border-darkborder pt-4 mb-6">
+                            <div class="flex justify-between items-center text-lg font-bold">
+                                <span>Skupaj cena:</span>
+                                <span class="gold-text text-2xl" id="boardTotalPrice">0.00 €</span>
+                            </div>
+                        </div>
+
+                        <button onclick="addCustomBoardToCart()" id="addBoardCartBtn" disabled class="w-full py-4 rounded-xl gold-gradient text-charcoal font-bold text-center disabled:opacity-40 disabled:cursor-not-allowed transition shadow-lg">
+                            Dodaj Ploščo v Košarico
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. VIRTUAL SOMMELIER SECTION -->
+        <section id="sec-sommelier" class="spa-section hidden py-12 max-w-5xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Inteligentno Spajanje</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Virtualni Divino Sommelier</h2>
+                <p class="text-slate-400 mt-2 max-w-xl mx-auto">Izberite jed ali vaš okus, naš digitalni sommelier pa vam bo priporočil popolno vinsko ali žgano spremljavo.</p>
+            </div>
+
+            <div class="bg-white dark:bg-darkcard p-8 rounded-3xl border border-gold-500/30 shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Katero jed boste uživali?</label>
+                        <select id="sommelierFood" class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm focus:border-gold-500 outline-none">
+                            <option value="cevapcici">Sarajevski Čevapčiči / Leskovački Uštipci</option>
+                            <option value="stejk">Gurmanska Pleskavica / Stejk</option>
+                            <option value="jagnjetina">Pečena Teletina / Jagnjetina pod peko</option>
+                            <option value="riba">Mediteranski Brancin / Hobotnica</option>
+                            <option value="sir">Balkanska Sirna Plošča & Kajmak</option>
+                            <option value="baklava">Baklava z Orehi / Tulumba</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Vaša preferenca pijače?</label>
+                        <select id="sommelierPref" class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm focus:border-gold-500 outline-none">
+                            <option value="red">Rdeče polno vino</option>
+                            <option value="white">Sveže belo vino / Peneče</option>
+                            <option value="rakija">Tradicionalna Premium Rakija</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center mb-8">
+                    <button onclick="getSommelierRecommendation()" class="px-8 py-3.5 rounded-full gold-gradient text-charcoal font-bold hover:shadow-lg transition">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Poisči Popolno Priporočilo
+                    </button>
+                </div>
+
+                <!-- Recommendation Result Container -->
+                <div id="sommelierResult" class="hidden p-6 rounded-2xl bg-slate-50 dark:bg-charcoal border border-gold-500/40">
+                    <!-- JS Injected -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. VIP CHEF'S TABLE SECTION -->
+        <section id="sec-chef" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="bg-gradient-to-r from-charcoal via-darkcard to-charcoal rounded-3xl border border-gold-500/30 p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="max-w-3xl">
+                    <span class="inline-block px-3 py-1 bg-gold-500/20 text-gold-400 rounded-full text-xs font-semibold tracking-wider mb-4 uppercase border border-gold-500/30">
+                        Ekskluzivna Doživetja
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-4">VIP Chef's Table Izkušnja</h2>
+                    <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+                        Sedež neposredno ob odprti kuhinji. Šef kuhinje Marko Petrović pripravi ekskluzivni degustacijski meni s 7 hodi z živo predstavitvijo priprave in izbranimi redkimi vini.
+                    </p>
+
+                    <!-- 7 Courses Timeline -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">1</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Amuse-bouche z Njeguškim pršutom</h4>
+                                <p class="text-xs text-slate-400">Pena iz staranega kajmaka, kaviar iz ajvarja, hrustljav somun.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">2</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Carpaccio Jadranskega Brancina</h4>
+                                <p class="text-xs text-slate-400">Olje črnega trufa, limonin gel, divja kapra.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">3</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Domači Mantije z Brizganim Bivalnim Sirom</h4>
+                                <p class="text-xs text-slate-400">Preliv iz toplega masla in divjega origana.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">4</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Telečji Mignon pod Peko</h4>
+                                <p class="text-xs text-slate-400">Krema iz pečenega paprike, mlada krompirjeva pena z zelišči.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">5</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Leskovačka Rulada iz Zrelega Žrebiča</h4>
+                                <p class="text-xs text-slate-400">Dimljen sir, slanina, redukcija Vranca Reserve.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">6</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Pred-sladica: Granita iz Robid in Viljamovke</h4>
+                                <p class="text-xs text-slate-400">Osvežitev brbončic s snežnim prahom.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <span class="w-8 h-8 rounded-full gold-gradient text-charcoal font-bold flex items-center justify-center shrink-0">7</span>
+                            <div>
+                                <h4 class="font-serif font-bold text-gold-300">Modernizirana Deconstructed Baklava</h4>
+                                <p class="text-xs text-slate-400">Pistacijev sladoled, zlati lističi, medeni sirup z rožno vodo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Cena na osebo (z vinsko spremljavo):</span>
+                            <span class="text-3xl font-serif font-bold gold-text">120.00 €</span>
+                        </div>
+                        <button onclick="bookChefTable()" class="px-8 py-3.5 rounded-full gold-gradient text-charcoal font-bold hover:shadow-xl transition">
+                            Rezerviraj VIP Chef's Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. GALLERY / UTRINKI SECTION -->
+        <section id="sec-gallery" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Vizualna Izkušnja</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Utrinki iz Gusto Divino</h2>
+                <p class="text-slate-400 mt-2">Oglejte si vzdušje našega ambienta, pripravo jedi na odprtem ognju in gurmanske krožnike.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" id="galleryGrid">
+                <!-- Gallery Images -->
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80', 'Glavna jedilnica z ambientno razsvetljavo')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Ambient">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Glavna jedilnica</span>
+                    </div>
+                </div>
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80', 'Priprava premijskega mesa na oglju')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Žar">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Žar na bukov oglje</span>
+                    </div>
+                </div>
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=1200&q=80', 'Izbor vrhunskih balkanskih vin')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Vina">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Vinska klet</span>
+                    </div>
+                </div>
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80', 'Balkanska plošča specialitet')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Plošča">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Gusto Plošča</span>
+                    </div>
+                </div>
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80', 'Letna terasa pod zvezdami')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Terasa">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Letna terasa</span>
+                    </div>
+                </div>
+                <div onclick="openGalleryModal('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1200&q=80', 'Tradicionalna Baklava z vanilijevim sladoledom')" class="group relative h-64 rounded-2xl overflow-hidden cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Sladica">
+                    <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                        <span class="text-sm font-medium text-white"><i class="fa-solid fa-magnifying-glass-plus mr-2"></i>Hišne sladice</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. EVENTS SECTION -->
+        <section id="sec-events" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Živa Glasba & Tematski Večeri</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Nadolazeči Dogodki</h2>
+                <p class="text-slate-400 mt-2">Uživajte v akustični balkanski glasbi, tamburaših in večerih vrhunskega vina.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-darkcard rounded-2xl border border-slate-200 dark:border-darkborder overflow-hidden shadow-xl flex flex-col md:flex-row">
+                    <div class="md:w-2/5 h-48 md:h-auto bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="p-6 md:w-3/5 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-gold-400 font-bold uppercase tracking-wider">Vsak Petek & Sobota</span>
+                            <h3 class="text-2xl font-serif font-bold my-2">Večer Akustičnih Tamburašev</h3>
+                            <p class="text-slate-400 text-sm mb-4">Pravi balkanski melos, stara mestna glasba in nepozabno sproščeno vzdušje ob svečah.</p>
+                        </div>
+                        <button onclick="showSection('reservation')" class="px-4 py-2 rounded-lg bg-gold-500/20 text-gold-400 font-semibold text-sm hover:bg-gold-500 hover:text-charcoal transition self-start">
+                            Rezerviraj za Petek
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-darkcard rounded-2xl border border-slate-200 dark:border-darkborder overflow-hidden shadow-xl flex flex-col md:flex-row">
+                    <div class="md:w-2/5 h-48 md:h-auto bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="p-6 md:w-3/5 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-gold-400 font-bold uppercase tracking-wider">Zadnji Četrtek v Mesecu</span>
+                            <h3 class="text-2xl font-serif font-bold my-2">Degustacija Vrancev & Žganj</h3>
+                            <p class="text-slate-400 text-sm mb-4">Predstavitev premijskih makedonskih in srbskih vinogradov z usklajenimi 5 hodi prigrizkov.</p>
+                        </div>
+                        <button onclick="showSection('reservation')" class="px-4 py-2 rounded-lg bg-gold-500/20 text-gold-400 font-semibold text-sm hover:bg-gold-500 hover:text-charcoal transition self-start">
+                            Rezerviraj Mesto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. GIFT CARDS SECTION -->
+        <section id="sec-giftcards" class="spa-section hidden py-12 max-w-5xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Podarite Doživetje</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Darilni Boni Gusto Divino</h2>
+                <p class="text-slate-400 mt-2">Personaliziran darilni bon za vaše najdražje ali poslovne partnerje z instantnim pošiljanjem.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Form -->
+                <div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-xl">
+                    <form id="giftCardForm" onsubmit="event.preventDefault(); generateGiftCard();">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Ime Prejemnika</label>
+                            <input type="text" id="gcRecipient" oninput="updateGcPreview()" placeholder="npr. Marko Novak" required class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm focus:border-gold-500 outline-none">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Osebno Posvetilo</label>
+                            <textarea id="gcMessage" oninput="updateGcPreview()" rows="3" placeholder="Vse najboljše za rojstni dan in obilo gurmanskih užitkov!" class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm focus:border-gold-500 outline-none"></textarea>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-2">Vrednost Bona</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <button type="button" onclick="setGcValue(50)" class="gc-val-btn px-3 py-2 rounded-xl border border-gold-500/40 text-sm font-bold bg-gold-500 text-charcoal">50 €</button>
+                                <button type="button" onclick="setGcValue(100)" class="gc-val-btn px-3 py-2 rounded-xl border border-gold-500/40 text-sm font-bold hover:bg-gold-500/20">100 €</button>
+                                <button type="button" onclick="setGcValue(150)" class="gc-val-btn px-3 py-2 rounded-xl border border-gold-500/40 text-sm font-bold hover:bg-gold-500/20">150 €</button>
+                                <button type="button" onclick="setGcValue(200)" class="gc-val-btn px-3 py-2 rounded-xl border border-gold-500/40 text-sm font-bold hover:bg-gold-500/20">200 €</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl gold-gradient text-charcoal font-bold text-center shadow-lg">
+                            Kupi Darilni Bon
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Card Preview -->
+                <div id="gcPreviewCard" class="relative bg-gradient-to-br from-charcoal via-slate-900 to-black p-8 rounded-3xl border-2 border-gold-500/60 shadow-2xl text-white aspect-[1.6/1] flex flex-col justify-between">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-serif text-2xl font-bold gold-text">GUSTO DIVINO</span>
+                            <p class="text-[9px] tracking-widest text-slate-400 uppercase">Premium Culinary Voucher</p>
+                        </div>
+                        <span class="text-3xl font-serif font-bold gold-text" id="gcPreviewAmount">50 €</span>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gold-400 uppercase tracking-wider mb-1">Za:</p>
+                        <h4 class="text-xl font-serif font-bold text-white" id="gcPreviewName">Marko Novak</h4>
+                        <p class="text-xs text-slate-300 italic mt-2 line-clamp-2" id="gcPreviewMsg">"Vse najboljše za rojstni dan in obilo gurmanskih užitkov!"</p>
+                    </div>
+
+                    <div class="flex justify-between items-end text-[10px] text-slate-400 border-t border-gold-500/20 pt-3">
+                        <span>Koda: <strong class="text-white" id="gcCode">GD-2026-8942</strong></span>
+                        <span>Veljavnost: 12 mesecev</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. REVIEWS SECTION (5.0 STAR SHOWCASE) -->
+        <section id="sec-reviews" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <div class="flex justify-center items-center gap-1 text-amber-400 text-2xl mb-2">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h2 class="text-4xl font-serif font-bold">Popolna Ocena 5.0 od Naših Gostov</h2>
+                <p class="text-slate-400 mt-2">Preberite izkušnje tistih, ki so že okusili čarobnost Gusto Divino.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl">
+                    <div class="flex items-center gap-1 text-amber-400 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 italic text-sm mb-6">"Najboljši čevapčiči in kajmak izven Sarajeva! Ambient ob kaminu z nežno tamburaško glasbo ustvari večer, ki ga ne pozabiš."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center font-bold text-charcoal">AM</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Aleksander M.</h4>
+                            <span class="text-xs text-slate-400">Ljubljana • Pred 3 dni</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl">
+                    <div class="flex items-center gap-1 text-amber-400 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 italic text-sm mb-6">"VIP Chef's Table je vrhunsko kulinarično doživetje. 7 hodov je bilo preprosto popolnih, vinsko spajanje pa na ravni Michelinovih zvezdic."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center font-bold text-charcoal">EK</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Elena K.</h4>
+                            <span class="text-xs text-slate-400">Dunaj • Pred 1 tednom</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 rounded-2xl bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder shadow-xl">
+                    <div class="flex items-center gap-1 text-amber-400 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-300 italic text-sm mb-6">"Možnost sestave lastne plošče je genialna! Vse meso je bilo izjemno sočno in pečeno točno po želji. Definitivno se vrnemo."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full gold-gradient flex items-center justify-center font-bold text-charcoal">RB</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Robert B.</h4>
+                            <span class="text-xs text-slate-400">Maribor • Pred 2 tednoma</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. RESERVATION SECTION WITH FLOOR PLAN -->
+        <section id="sec-reservation" class="spa-section hidden py-12 max-w-7xl mx-auto px-4">
+            <div class="text-center mb-10">
+                <span class="text-gold-400 uppercase tracking-widest text-sm font-semibold">Zagotovite Si Mesto</span>
+                <h2 class="text-4xl font-serif font-bold mt-1">Spletna Rezervacija Mize</h2>
+                <p class="text-slate-400 mt-2">Izberite želeno območje in mizo na našem interaktivnem tlorisu.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Floor Plan Selector -->
+                <div class="lg:col-span-2 bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-xl">
+                    <h3 class="text-xl font-serif font-bold mb-4 flex items-center justify-between">
+                        <span>Interaktivni Tloris Restavracije</span>
+                        <span class="text-xs text-gold-400"><i class="fa-solid fa-circle text-[10px] mr-1"></i>Kliknite mizo za izbiro</span>
+                    </h3>
+
+                    <!-- Table Map -->
+                    <div class="bg-charcoal p-6 rounded-xl border border-gold-500/20 relative min-h-[380px] flex flex-col justify-between">
+                        <!-- Area 1: Ob Kaminu -->
+                        <div>
+                            <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-3"><i class="fa-solid fa-fire mr-1"></i> Ob Kaminu (Topel Ambient)</span>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <button type="button" onclick="selectFloorTable('M1 - Kamin', 2)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-gold-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">M1 (2 os.)</span>
+                                </button>
+                                <button type="button" onclick="selectFloorTable('M2 - Kamin VIP', 4)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-gold-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">M2 (4 os.)</span>
+                                </button>
+                                <button type="button" onclick="selectFloorTable('M3 - Kamin Družinska', 6)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-gold-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">M3 (6 os.)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Area 2: Pokrita Terasa -->
+                        <div>
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-3"><i class="fa-solid fa-sun mr-1"></i> Pokrita Letna Terasa</span>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <button type="button" onclick="selectFloorTable('T1 - Terasa Panorama', 2)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-emerald-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">T1 (2 os.)</span>
+                                </button>
+                                <button type="button" onclick="selectFloorTable('T2 - Terasa', 4)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-emerald-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">T2 (4 os.)</span>
+                                </button>
+                                <button type="button" onclick="selectFloorTable('T3 - Terasa Seppele', 8)" class="table-btn p-3 rounded-xl border border-gold-500/40 text-center hover:border-gold-500 bg-darkborder">
+                                    <i class="fa-solid fa-chair text-emerald-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">T3 (8 os.)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Area 3: VIP Balkanska Loža -->
+                        <div>
+                            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block mb-3"><i class="fa-solid fa-crown mr-1"></i> VIP Balkanska Loža</span>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button type="button" onclick="selectFloorTable('VIP-1 Loža', 6)" class="table-btn p-3 rounded-xl border border-purple-500/40 text-center hover:border-purple-400 bg-darkborder">
+                                    <i class="fa-solid fa-couch text-purple-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">VIP 1 (6 os.)</span>
+                                </button>
+                                <button type="button" onclick="selectFloorTable('VIP-2 Loža Divino', 10)" class="table-btn p-3 rounded-xl border border-purple-500/40 text-center hover:border-purple-400 bg-darkborder">
+                                    <i class="fa-solid fa-couch text-purple-400 block mb-1"></i>
+                                    <span class="text-xs font-bold block">VIP 2 (10 os.)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservation Form -->
+                <div class="bg-white dark:bg-darkcard p-6 rounded-2xl border border-slate-200 dark:border-darkborder shadow-xl">
+                    <form id="resForm" onsubmit="event.preventDefault(); submitReservation();">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Izbrana Miza</label>
+                            <input type="text" id="resSelectedTable" readonly value="Ni izbrana (kliknite na tlorisu)" class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm font-bold text-gold-400 outline-none">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Ime in Priimek</label>
+                            <input type="text" id="resName" required placeholder="Janez Novak" class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm outline-none">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Datum</label>
+                                <input type="date" id="resDate" required class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Ura</label>
+                                <select id="resTime" required class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm outline-none">
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="21:00">21:00</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-1">Število Oseb</label>
+                            <input type="number" id="resGuests" min="1" max="12" value="2" required class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm outline-none">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-1">Posebne Želje / Opombe</label>
+                            <textarea id="resNotes" rows="2" placeholder="Praznovanje rojstnega dne, alergije..." class="w-full bg-slate-100 dark:bg-charcoal border border-slate-300 dark:border-darkborder rounded-xl p-3 text-sm outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl gold-gradient text-charcoal font-bold text-center shadow-lg">
+                            Potrdi Rezervacijo
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SHOPPING CART DRAWER -->
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-darkcard border-l border-gold-500/30 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+        <div class="p-4 border-b border-slate-200 dark:border-darkborder flex justify-between items-center bg-charcoal text-white">
+            <h3 class="font-serif font-bold text-lg text-gold-400"><i class="fa-solid fa-basket-shopping mr-2"></i>Vaša Košarica</h3>
+            <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <div id="cartItemsList" class="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar">
+            <!-- JS Cart Items -->
+        </div>
+
+        <div class="p-4 border-t border-slate-200 dark:border-darkborder bg-slate-50 dark:bg-charcoal space-y-3">
+            <!-- Promo Code Input -->
+            <div class="flex gap-2">
+                <input type="text" id="promoInput" placeholder="Koda (npr. GUSTO10)" class="w-full bg-white dark:bg-darkcard border border-slate-300 dark:border-darkborder rounded-lg px-3 py-2 text-xs uppercase outline-none">
+                <button onclick="applyPromoCode()" class="px-3 py-2 bg-gold-500 text-charcoal font-bold text-xs rounded-lg hover:bg-gold-400">Uporabi</button>
+            </div>
+
+            <!-- Tip Selection -->
+            <div>
+                <span class="text-xs text-slate-400 block mb-1">Napitnina za kuhinjo:</span>
+                <div class="grid grid-cols-4 gap-1 text-xs">
+                    <button onclick="setTip(0)" class="tip-btn border p-1 rounded text-center active border-gold-500">0%</button>
+                    <button onclick="setTip(5)" class="tip-btn border p-1 rounded text-center">5%</button>
+                    <button onclick="setTip(10)" class="tip-btn border p-1 rounded text-center">10%</button>
+                    <button onclick="setTip(15)" class="tip-btn border p-1 rounded text-center">15%</button>
+                </div>
+            </div>
+
+            <!-- Total Summary -->
+            <div class="space-y-1 text-xs pt-2">
+                <div class="flex justify-between"><span>Vmesna vsota:</span><span id="cartSubtotal">0.00 €</span></div>
+                <div class="flex justify-between text-emerald-400" id="cartDiscountRow" style="display:none;"><span>Popust (10%):</span><span id="cartDiscount">-0.00 €</span></div>
+                <div class="flex justify-between"><span>Napitnina:</span><span id="cartTip">0.00 €</span></div>
+                <div class="flex justify-between text-base font-bold text-gold-400 pt-1 border-t border-slate-300 dark:border-darkborder">
+                    <span>SKUPAJ:</span><span id="cartTotal">0.00 €</span>
+                </div>
+            </div>
+
+            <button onclick="checkoutCart()" class="w-full py-3.5 rounded-xl gold-gradient text-charcoal font-bold text-center shadow-lg">
+                Oddaj Naročilo
+            </button>
+        </div>
+    </div>
+
+    <!-- GALLERY MODAL -->
+    <div id="galleryModal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+        <button onclick="closeGalleryModal()" class="absolute top-6 right-6 text-white text-3xl"><i class="fa-solid fa-xmark"></i></button>
+        <div class="max-w-4xl w-full text-center">
+            <img id="modalImg" src="" class="max-h-[80vh] mx-auto rounded-xl shadow-2xl object-contain">
+            <p id="modalCaption" class="text-gold-400 font-serif text-lg mt-4"></p>
+        </div>
+    </div>
+
+    <!-- WELCOME PROMO MODAL (FIRST VISIT) -->
+    <div id="welcomeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-charcoal border-2 border-gold-500 p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl">
+            <button onclick="closeWelcomeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="w-16 h-16 rounded-full gold-gradient mx-auto flex items-center justify-center text-charcoal text-3xl mb-4">
+                <i class="fa-solid fa-gift"></i>
+            </div>
+            <h3 class="text-2xl font-serif font-bold text-white mb-2">Dobrodošli v Gusto Divino</h3>
+            <p class="text-slate-300 text-sm mb-6">Uporabite promocijsko kodo <strong class="text-gold-400">GUSTO10</strong> ob prvem spletnem naročilu ali rezervaciji za <strong class="text-gold-400">10% POPUST</strong>!</p>
+            <button onclick="closeWelcomeModal()" class="w-full py-3 rounded-xl gold-gradient text-charcoal font-bold">
+                Prejmi Popust
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-charcoal border-t border-gold-500/20 text-slate-400 text-sm py-12">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-charcoal font-bold font-serif">GD</div>
+                    <span class="font-serif font-bold text-lg text-white tracking-wider">GUSTO DIVINO</span>
+                </div>
+                <p class="text-xs leading-relaxed">Vrhunska kulinarična izkušnja balkanskega žara na oglje in mediteranskih specialitet v elegantnem ambientu.</p>
+            </div>
+            <div>
+                <h4 class="font-serif font-bold text-white mb-3">Odpiralni Čas</h4>
+                <p class="text-xs">Ponedeljek - Četrtek: 11:00 - 23:00</p>
+                <p class="text-xs mt-1">Petek - Sobota: 11:00 - 00:00</p>
+                <p class="text-xs mt-1">Nedelja: 12:00 - 22:00</p>
+            </div>
+            <div>
+                <h4 class="font-serif font-bold text-white mb-3">Lokacija & Kontakt</h4>
+                <p class="text-xs"><i class="fa-solid fa-location-dot text-gold-400 mr-2"></i>Dunajska cesta 152, Ljubljana</p>
+                <p class="text-xs mt-1"><i class="fa-solid fa-phone text-gold-400 mr-2"></i>+386 1 555 88 99</p>
+                <p class="text-xs mt-1"><i class="fa-solid fa-envelope text-gold-400 mr-2"></i>info@gustodivino.si</p>
+            </div>
+            <div>
+                <h4 class="font-serif font-bold text-white mb-3">Sledite Nam</h4>
+                <div class="flex space-x-3 text-lg">
+                    <a href="#" class="w-9 h-9 rounded-full bg-darkborder flex items-center justify-center hover:text-gold-400 transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-darkborder flex items-center justify-center hover:text-gold-400 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="w-9 h-9 rounded-full bg-darkborder flex items-center justify-center hover:text-gold-400 transition"><i class="fa-brands fa-tripadvisor"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-darkborder text-center text-xs text-slate-500">
+            © 2026 Gusto Divino Restaurant. Vse pravice pridržane.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STRUCTURES ---
+        const menuItems = [
+            { id: 1, name: "Sarajevski Čevapčiči (10 kom)", cat: "roštilj", price: 14.50, desc: "100% mlada govedina, pečen na bukov oglje, postrežen z vročim somunom, kajmakom in čebulo.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, name: "Gurmanska Pleskavica s Sirom", cat: "roštilj", price: 16.80, desc: "Polnjena z mlado gaudo, slanino in tucano papriko na žaru.", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, name: "Telečja Krača pod Peko", cat: "glavne", price: 24.00, desc: "Počasi pečena 6 ur v glineni posodi s pečenim krompirjem in zelišči.", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, name: "Hladna Balkanska Mezga", cat: "predjedi", price: 18.50, desc: "Njeguški pršut, livanjski sir, kajmak, urnebes, pečeje paprike in topli uštipci.", img: "https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=500&q=80" },
+            { id: 5, name: "Mediteranski Brancin na Žaru", cat: "glavne", price: 22.50, desc: "Svež jadranski brancin s blitvo in krompirjem ter tržaško omako.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=500&q=80" },
+            { id: 6, name: "Tradicionalna Sočna Baklava", cat: "sladice", price: 6.50, desc: "Ročno razvlečeno testo, mleti orehi, medeni agda sirup in vanilijev sladoled.", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80" },
+            { id: 7, name: "Vranec Special Reserve 0.75L", cat: "pijače", price: 38.00, desc: "Vrhunsko rdeče suho vino iz Tikveškega vinogorja.", img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80" },
+            { id: 8, name: "Ajvar & Pršut Bruschete", cat: "predjedi", price: 9.50, desc: "Hrustljava bruscheta s pečenim ajvarjem, njeguškim pršutom in svežim baziliko oljem.", img: "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?auto=format&fit=crop&w=500&q=80" },
+            { id: 9, name: "Ražnjiči iz Jagnjetine", cat: "roštilj", price: 19.90, desc: "Mladi jagnječji vratovi, marinirani v rožmarinu in česnu, pečeni na žerjavici.", img: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=500&q=80" },
+            { id: 10, name: "Punjena Paprika v Gibanici", cat: "glavne", price: 17.50, desc: "Paprike polnjene z mletim mesom in rižem, pečene v domačem paradižnikovem sosu.", img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=500&q=80" },
+            { id: 11, name: "Rožnata Tufahija", cat: "sladice", price: 7.20, desc: "Kuhano jabolko polnjeno z orehi in stepeno smetano, postreženo v sladkem sirupu.", img: "https://images.unsplash.com/photo-1562777717-dc6984f65a63?auto=format&fit=crop&w=500&q=80" },
+            { id: 12, name: "Rakija Domaća Šljivovica 0.1L", cat: "pijače", price: 5.50, desc: "Dvakrat destilirana žganje iz zrelih sliv, zorena v hrastovih sodih.", img: "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        const boardMeatOptions = [
+            { id: 'bm1', name: 'Sarajevski Čevapčiči (5 kom)', price: 7.50 },
+            { id: 'bm2', name: 'Leskovački Uštipci (4 kom)', price: 8.00 },
+            { id: 'bm3', name: 'Dimljena Vratovina na Žaru', price: 9.00 },
+            { id: 'bm4', name: 'Piscancji Ražnjiči v Slanini', price: 8.50 }
+        ];
+
+        const boardSauceOptions = [
+            { id: 'bs1', name: 'Domači Staran Kajmak', price: 3.00 },
+            { id: 'bs2', name: 'Pravi Domači Ajvar', price: 2.50 },
+            { id: 'bs3', name: 'Pikanten Urnebes', price: 2.50 },
+            { id: 'bs4', name: 'Livanjski Stari Sir', price: 4.00 }
+        ];
+
+        const boardSideOptions = [
+            { id: 'bo1', name: 'Pekarski Krompir z Zelišči', price: 4.00 },
+            { id: 'bo2', name: 'Vroči Domači Somun (2 kom)', price: 3.00 },
+            { id: 'bo3', name: 'Šopska Salata z Bivalnim Sirom', price: 5.50 }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let cart = [];
+        let customBoardSelections = { meats: [], sauces: [], sides: [] };
+        let activeTipPercent = 0;
+        let appliedPromo = false;
+        let selectedTableObj = null;
+        let currentGcValue = 50;
+
+        // Web Audio API Ambient Sound
+        let audioCtx = null;
+        let isAmbientPlaying = false;
+        let noiseNode = null;
+
+        // --- SPA NAVIGATION ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.spa-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById(`sec-${sectionId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Nav Highlight
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.sec === sectionId) {
+                    btn.classList.add('text-gold-400', 'font-bold');
+                } else {
+                    btn.classList.remove('text-gold-400', 'font-bold');
+                }
+            });
+        }
+
+        // --- MENU RENDERING & FILTERING ---
+        function renderMenu(filter = 'all') {
+            const grid = document.getElementById('menuGrid');
+            grid.innerHTML = '';
+
+            const items = filter === 'all' ? menuItems : menuItems.filter(i => i.cat === filter);
+
+            items.forEach(item => {
+                grid.innerHTML += `
+                    <div class="bg-white dark:bg-darkcard rounded-2xl border border-slate-200 dark:border-darkborder overflow-hidden shadow-xl hover:border-gold-500/40 transition flex flex-col justify-between">
+                        <div>
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="${item.img}" class="w-full h-full object-cover hover:scale-105 transition duration-500" alt="${item.name}">
+                                <span class="absolute top-3 right-3 bg-charcoal/90 text-gold-400 font-bold px-3 py-1 rounded-full text-sm border border-gold-500/30">
+                                    ${item.price.toFixed(2)} €
+                                </span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-serif font-bold mb-2">${item.name}</h3>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4">${item.desc}</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button onclick="addToCart(${item.id})" class="w-full py-2.5 rounded-xl border border-gold-500/40 text-gold-400 font-bold text-sm hover:bg-gold-500 hover:text-charcoal transition">
+                                <i class="fa-solid fa-cart-plus mr-2"></i>Dodaj v Naročilo
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterMenu(cat) {
+            document.querySelectorAll('.menu-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-gold-500', 'text-charcoal', 'active');
+            });
+            event.target.classList.add('bg-gold-500', 'text-charcoal', 'active');
+            renderMenu(cat);
+        }
+
+        // --- CUSTOM BOARD BUILDER LOGIC ---
+        function initBoardBuilder() {
+            const meatContainer = document.getElementById('boardMeatOptions');
+            const sauceContainer = document.getElementById('boardSauceOptions');
+            const sideContainer = document.getElementById('boardSideOptions');
+
+            meatContainer.innerHTML = boardMeatOptions.map(m => `
+                <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-darkborder hover:border-gold-500 cursor-pointer">
+                    <span class="text-sm font-medium"><input type="checkbox" onchange="toggleBoardItem('meats', '${m.id}')" class="mr-2 accent-gold-500"> ${m.name}</span>
+                    <span class="text-xs font-bold text-gold-400">+${m.price.toFixed(2)} €</span>
+                </label>
+            `).join('');
+
+            sauceContainer.innerHTML = boardSauceOptions.map(s => `
+                <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-darkborder hover:border-gold-500 cursor-pointer">
+                    <span class="text-sm font-medium"><input type="checkbox" onchange="toggleBoardItem('sauces', '${s.id}')" class="mr-2 accent-gold-500"> ${s.name}</span>
+                    <span class="text-xs font-bold text-gold-400">+${s.price.toFixed(2)} €</span>
+                </label>
+            `).join('');
+
+            sideContainer.innerHTML = boardSideOptions.map(s => `
+                <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-darkborder hover:border-gold-500 cursor-pointer">
+                    <span class="text-sm font-medium"><input type="checkbox" onchange="toggleBoardItem('sides', '${s.id}')" class="mr-2 accent-gold-500"> ${s.name}</span>
+                    <span class="text-xs font-bold text-gold-400">+${s.price.toFixed(2)} €</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleBoardItem(type, id) {
+            const index = customBoardSelections[type].indexOf(id);
+            if (index > -1) {
+                customBoardSelections[type].splice(index, 1);
+            } else {
+                customBoardSelections[type].push(id);
+            }
+            updateBoardSummary();
+        }
+
+        function updateBoardSummary() {
+            const list = document.getElementById('boardSummaryList');
+            let total = 0;
+            let selectedItems = [];
+
+            customBoardSelections.meats.forEach(id => {
+                const item = boardMeatOptions.find(x => x.id === id);
+                if(item) { total += item.price; selectedItems.push(item); }
+            });
+            customBoardSelections.sauces.forEach(id => {
+                const item = boardSauceOptions.find(x => x.id === id);
+                if(item) { total += item.price; selectedItems.push(item); }
+            });
+            customBoardSelections.sides.forEach(id => {
+                const item = boardSideOptions.find(x => x.id === id);
+                if(item) { total += item.price; selectedItems.push(item); }
+            });
+
+            if(selectedItems.length === 0) {
+                list.innerHTML = `<p class="text-slate-400 italic text-center py-8">Plošča je trenutno prazna. Izberite sestavine na levi strani.</p>`;
+                document.getElementById('addBoardCartBtn').disabled = true;
+            } else {
+                list.innerHTML = selectedItems.map(i => `
+                    <div class="flex justify-between py-1 border-b border-slate-100 dark:border-darkborder">
+                        <span>${i.name}</span>
+                        <span class="font-bold text-gold-400">${i.price.toFixed(2)} €</span>
+                    </div>
+                `).join('');
+                document.getElementById('addBoardCartBtn').disabled = false;
+            }
+
+            document.getElementById('boardTotalPrice').innerText = total.toFixed(2) + ' €';
+        }
+
+        function addCustomBoardToCart() {
+            let total = 0;
+            let names = [];
+            [...customBoardSelections.meats, ...customBoardSelections.sauces, ...customBoardSelections.sides].forEach(id => {
+                const all = [...boardMeatOptions, ...boardSauceOptions, ...boardSideOptions];
+                const item = all.find(x => x.id === id);
+                if(item) { total += item.price; names.push(item.name); }
+            });
+
+            cart.push({
+                id: 'board-' + Date.now(),
+                name: "Prilagojena Gusto Plošča",
+                desc: names.join(', '),
+                price: total,
+                qty: 1
+            });
+
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        // --- VIRTUAL SOMMELIER ---
+        function getSommelierRecommendation() {
+            const food = document.getElementById('sommelierFood').value;
+            const pref = document.getElementById('sommelierPref').value;
+            const resContainer = document.getElementById('sommelierResult');
+
+            let rec = { wine: "", desc: "", note: "" };
+
+            if(food === 'cevapcici' || food === 'stejk') {
+                if(pref === 'rakija') {
+                    rec = { wine: "Dunjevača Premium (Stara Dunja 5 let)", desc: "Aromatično žganje iz dunje, starano v hrastovih sodih, idealno reže maščobo žara.", note: "Serviramo ohlajeno na 8°C v tulipanastih kozarcih." };
+                } else {
+                    rec = { wine: "Vranec Special Reserve 2018 (Tikveš)", desc: "Robustno rdeče vino z aromo temnega ribiza, tobaka in črne čokolade. Popolno se ujema z govedino na oglju.", note: "Dekantirati 20 minut pred strežbo." };
+                }
+            } else if(food === 'riba') {
+                rec = { wine: "Malvazija Istrska Selekcija 2022", desc: "Mineralno, sveže belo vino z notami rumenega sadja in mediteranskih zelišč.", note: "Poudari sočnost svežega brancina." };
+            } else {
+                rec = { wine: "Plavac Mali Grand Cru 2019", desc: "Bogato rdeče vino z visokim telesom in notami suhih sliv ter mediteranskega makije.", note: "Izjemna harmonija z zrelimi balkanskimi siri." };
+            }
+
+            resContainer.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-charcoal text-2xl shrink-0"><i class="fa-solid fa-wine-bottle"></i></div>
+                    <div>
+                        <span class="text-xs text-gold-400 uppercase font-bold tracking-wider block">Priporočilo Sommeliera:</span>
+                        <h4 class="text-xl font-serif font-bold my-1 text-white">${rec.wine}</h4>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-2">${rec.desc}</p>
+                        <p class="text-xs text-gold-300 italic"><i class="fa-solid fa-circle-info mr-1"></i>${rec.note}</p>
+                    </div>
+                </div>
+            `;
+            resContainer.classList.remove('hidden');
+        }
+
+        // --- CART DRAWER LOGIC ---
+        function addToCart(itemId) {
+            const item = menuItems.find(i => i.id === itemId);
+            if(!item) return;
+
+            const existing = cart.find(i => i.id === itemId);
+            if(existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItemsList');
+            const badge = document.getElementById('cartBadge');
+            const badgeMobile = document.getElementById('cartBadgeMobile');
+
+            const totalItems = cart.reduce((acc, i) => acc + i.qty, 0);
+            if(totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+                badgeMobile.innerText = totalItems;
+                badgeMobile.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+                badgeMobile.classList.add('hidden');
+            }
+
+            if(cart.length === 0) {
+                list.innerHTML = `<p class="text-slate-400 text-center py-12 text-sm">Vaša košarica je prazna.</p>`;
+            } else {
+                list.innerHTML = cart.map((item, idx) => `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-charcoal border border-slate-200 dark:border-darkborder">
+                        <div>
+                            <h4 class="font-bold text-sm">${item.name}</h4>
+                            <span class="text-xs text-gold-400 font-semibold">${item.price.toFixed(2)} €</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty(${idx}, -1)" class="w-6 h-6 rounded bg-darkborder flex items-center justify-center text-xs">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="changeQty(${idx}, 1)" class="w-6 h-6 rounded bg-darkborder flex items-center justify-center text-xs">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            calculateCartTotals();
+        }
+
+        function changeQty(index, change) {
+            cart[index].qty += change;
+            if(cart[index].qty <= 0) cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function calculateCartTotals() {
+            const subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            let discount = appliedPromo ? subtotal * 0.10 : 0;
+            let tip = subtotal * (activeTipPercent / 100);
+            let total = subtotal - discount + tip;
+
+            document.getElementById('cartSubtotal').innerText = subtotal.toFixed(2) + ' €';
+            document.getElementById('cartTip').innerText = tip.toFixed(2) + ' €';
+            document.getElementById('cartTotal').innerText = total.toFixed(2) + ' €';
+
+            const discountRow = document.getElementById('cartDiscountRow');
+            if(appliedPromo) {
+                discountRow.style.display = 'flex';
+                document.getElementById('cartDiscount').innerText = '-' + discount.toFixed(2) + ' €';
+            } else {
+                discountRow.style.display = 'none';
+            }
+        }
+
+        function applyPromoCode() {
+            const val = document.getElementById('promoInput').value.trim().toUpperCase();
+            if(val === 'GUSTO10') {
+                appliedPromo = true;
+                alert('Promocijska koda GUSTO10 uspešno uveljavljena (10% popust)!');
+                calculateCartTotals();
+            } else {
+                alert('Napačna promocijska koda.');
+            }
+        }
+
+        function setTip(pct) {
+            activeTipPercent = pct;
+            document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('border-gold-500', 'active'));
+            event.target.classList.add('border-gold-500', 'active');
+            calculateCartTotals();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function checkoutCart() {
+            if(cart.length === 0) {
+                alert('Vaša košarica je prazna!');
+                return;
+            }
+            alert('Hvala za vaše naročilo! Ekipa Gusto Divino ga že pripravlja.');
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        // --- RESERVATION INTERACTION ---
+        function selectFloorTable(tableName, seats) {
+            selectedTableObj = { name: tableName, seats };
+            document.getElementById('resSelectedTable').value = `${tableName} (${seats} osebe)`;
+            document.querySelectorAll('.table-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-gold-500'));
+            event.currentTarget.classList.add('ring-2', 'ring-gold-500');
+        }
+
+        function submitReservation() {
+            const name = document.getElementById('resName').value;
+            const date = document.getElementById('resDate').value;
+            const time = document.getElementById('resTime').value;
+            const table = document.getElementById('resSelectedTable').value;
+
+            if(!selectedTableObj) {
+                alert('Prosimo, izberite mizo na tlorisu!');
+                return;
+            }
+
+            alert(`Hvala ${name}! Vaša rezervacija za ${table} dne ${date} ob ${time} je uspesno potrjena.`);
+        }
+
+        // --- AMBIENT MUSIC GENERATOR (WEB AUDIO API) ---
+        // Vsak "žanr" je sintetiziran v brskalniku (brez zunanjih posnetkov) z
+        // različnimi kombinacijami šuma, filtrov in oscilatorjev, da ustvari
+        // drugačno vzdušje za vsako izbiro v spustnem meniju.
+        let ambientNodes = [];
+
+        function stopAmbientMusic() {
+            ambientNodes.forEach(n => { try { n.stop && n.stop(); n.disconnect && n.disconnect(); } catch(e) {} });
+            ambientNodes = [];
+            isAmbientPlaying = false;
+            document.getElementById('ambientIcon').classList.remove('animate-bounce');
+        }
+
+        function setAmbientMusic(style) {
+            if(!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            stopAmbientMusic();
+
+            if(style === 'off') {
+                return;
+            }
+
+            const masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0.05;
+            masterGain.connect(audioCtx.destination);
+            ambientNodes.push(masterGain);
+
+            if(style === 'fireplace') {
+                // Topel prasketajoč kamin: filtriran beli šum
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                noise.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 800;
+
+                noise.connect(filter);
+                filter.connect(masterGain);
+                noise.start();
+                ambientNodes.push(noise, filter);
+
+            } else if(style === 'tamburica') {
+                // Balkanski tamburaši: tople, rahlo tremolo strune v molu
+                const notes = [196.00, 233.08, 293.66, 349.23]; // G3, Bb3, D4, F4 - balkanski mol
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    osc.type = 'triangle';
+                    osc.frequency.value = freq;
+
+                    const trem = audioCtx.createOscillator();
+                    trem.type = 'sine';
+                    trem.frequency.value = 5 + idx; // tremolo za "brenkanje" strun
+
+                    const tremGain = audioCtx.createGain();
+                    tremGain.gain.value = 0.4;
+                    trem.connect(tremGain.gain);
+
+                    const noteGain = audioCtx.createGain();
+                    noteGain.gain.value = 0.15 / (idx + 1);
+
+                    osc.connect(noteGain);
+                    noteGain.connect(masterGain);
+                    osc.start();
+                    trem.start();
+                    ambientNodes.push(osc, trem, tremGain, noteGain);
+                });
+
+            } else if(style === 'mediteran') {
+                // Mediteranski chill: mehak pad akord in valovi (kitara/morje občutek)
+                const notes = [220.00, 277.18, 329.63]; // A3, C#4, E4 - durov akord
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+
+                    const lfo = audioCtx.createOscillator();
+                    lfo.type = 'sine';
+                    lfo.frequency.value = 0.15 + idx * 0.05; // počasno valovanje kot morje
+
+                    const lfoGain = audioCtx.createGain();
+                    lfoGain.gain.value = 0.05;
+                    lfo.connect(lfoGain.gain);
+
+                    const noteGain = audioCtx.createGain();
+                    noteGain.gain.value = 0.1;
+
+                    osc.connect(noteGain);
+                    noteGain.connect(masterGain);
+                    osc.start();
+                    lfo.start();
+                    ambientNodes.push(osc, lfo, lfoGain, noteGain);
+                });
+
+            } else if(style === 'jazz') {
+                // Nočni jazz bar: topel bas pulz + rahel "brushed drum" šum
+                const bass = audioCtx.createOscillator();
+                bass.type = 'sawtooth';
+                bass.frequency.value = 110; // A2
+
+                const bassFilter = audioCtx.createBiquadFilter();
+                bassFilter.type = 'lowpass';
+                bassFilter.frequency.value = 400;
+
+                const bassGain = audioCtx.createGain();
+                bassGain.gain.value = 0.12;
+
+                bass.connect(bassFilter);
+                bassFilter.connect(bassGain);
+                bassGain.connect(masterGain);
+                bass.start();
+                ambientNodes.push(bass, bassFilter, bassGain);
+
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+                const brush = audioCtx.createBufferSource();
+                brush.buffer = buffer;
+                brush.loop = true;
+
+                const brushFilter = audioCtx.createBiquadFilter();
+                brushFilter.type = 'highpass';
+                brushFilter.frequency.value = 3000;
+
+                const brushGain = audioCtx.createGain();
+                brushGain.gain.value = 0.02;
+
+                brush.connect(brushFilter);
+                brushFilter.connect(brushGain);
+                brushGain.connect(masterGain);
+                brush.start();
+                ambientNodes.push(brush, brushFilter, brushGain);
+            }
+
+            isAmbientPlaying = true;
+            document.getElementById('ambientIcon').classList.add('animate-bounce');
+        }
+
+        // --- GIFT CARD GENERATOR ---
+        function setGcValue(val) {
+            currentGcValue = val;
+            document.getElementById('gcPreviewAmount').innerText = val + ' €';
+            document.querySelectorAll('.gc-val-btn').forEach(b => b.classList.remove('bg-gold-500', 'text-charcoal'));
+            event.target.classList.add('bg-gold-500', 'text-charcoal');
+        }
+
+        function updateGcPreview() {
+            const name = document.getElementById('gcRecipient').value || 'Marko Novak';
+            const msg = document.getElementById('gcMessage').value || 'Vse najboljše za rojstni dan in obilo gurmanskih užitkov!';
+            document.getElementById('gcPreviewName').innerText = name;
+            document.getElementById('gcPreviewMsg').innerText = `"${msg}"`;
+        }
+
+        function generateGiftCard() {
+            alert(`Darilni bon za ${currentGcValue} € je bil uspešno generiran in poslan!`);
+        }
+
+        // --- MODALS & UTILS ---
+        function openGalleryModal(imgUrl, caption) {
+            document.getElementById('modalImg').src = imgUrl;
+            document.getElementById('modalCaption').innerText = caption;
+            document.getElementById('galleryModal').classList.remove('hidden');
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').classList.add('hidden');
+        }
+
+        function closeWelcomeModal() {
+            document.getElementById('welcomeModal').classList.add('hidden');
+        }
+
+        function toggleMobileNav() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function toggleLanguage() {
+            const btn = document.getElementById('langBtn');
+            btn.innerText = btn.innerText.includes('SLO') ? 'ENG | SLO' : 'SLO | ENG';
+        }
+
+        function bookChefTable() {
+            showSection('reservation');
+            selectFloorTable('VIP-2 Loža Divino', 10);
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            renderMenu('all');
+            initBoardBuilder();
+
+            // Show welcome promo modal after 1.5 seconds
+            setTimeout(() => {
+                document.getElementById('welcomeModal').classList.remove('hidden');
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
